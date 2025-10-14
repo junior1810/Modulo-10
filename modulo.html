@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validador de Cédulas RD</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #resultado {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Validador de Cédulas RD</h1>
+    <input type="text" id="cedula" placeholder="Ingrese su cédula">
+    <button onclick="validar()">Validar Cédula</button>
+    <div id="resultado"></div>
+
+    <script>
+        function validar() {
+            let cedula = document.getElementById("cedula").value;
+            let resultado = document.getElementById("resultado");
+
+            let num = cedula.replace(/-/g, '');
+
+            if (!/^\d{11}$/.test(num)) {
+                resultado.textContent = "CÉDULA INCORRECTA: Debe contener 11 dígitos.";
+                resultado.style.color = "red";
+                return;
+            }
+
+            let suma = 0;
+            let multiplicador = [1,2];
+
+            for (let i = 0; i < 10; i++) {
+                let producto = parseInt(num[i]) * multiplicador[i % 2];
+                if (producto > 9) {
+                    producto = Math.floor(producto / 10) + (producto % 10);
+                }
+                suma += producto;
+            }
+
+            let modulo = suma % 10;
+            let digitoVerificador = modulo === 0 ? 0 : 10 - modulo;
+
+            if (digitoVerificador === parseInt(num[10])) {
+                resultado.textContent = "CÉDULA ES CORRECTA";
+                resultado.style.color = "green";
+            } else {
+                resultado.textContent = "CÉDULA ES INCORRECTA";
+                resultado.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>
